@@ -2,6 +2,7 @@
 #define _USTRING_H
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 struct ustr {
     char* data;
@@ -11,5 +12,7 @@ struct ustr {
 struct ustr* ustr_make ();
 void ustr_pushback (struct ustr*, const char);
 void ustr_append (struct ustr*, const char*);
+void ustr_clear (struct ustr*);
+void ustr_erase (struct ustr*, size_t, size_t);
 
 #endif
