@@ -1,0 +1,4 @@
+implemented:
+    push_back, append, clear, erase, pop_back, startswith, endswith.
+to implement:
+    contains, replace, substr, copy, swap

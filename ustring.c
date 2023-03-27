@@ -3,72 +3,99 @@
 
 struct ustr* ustr_make ()
 {
-    struct ustr* sst = (struct ustr*) malloc(sizeof(struct ustr));
-    sst->data = (char*) malloc(1);
-    sst->size = 0;
+    struct ustr* ust = (struct ustr*) malloc(sizeof(struct ustr));
+    ust->data = (char*) malloc(1);
+    ust->size = 0;
 
-    sst->data[0] = '\0';
-    return sst;
+    ust->data[0] = '\0';
+    return ust;
 }
 
-void ustr_pushback (struct ustr* sst, const char p)
+void ustr_pushBack (struct ustr* ust, const char p)
 {
-    assert(sst);
-    sst->data = (char*) realloc(sst->data, sst->size + 2);
-    sst->data[sst->size] = p;
-    sst->data[sst->size + 1] = '\0';
-    sst->size++;
+    assert(ust != NULL);
+    ust->data = (char*) realloc(ust->data, ust->size + 2);
+    ust->data[ust->size] = p;
+    ust->data[ust->size + 1] = '\0';
+    ust->size++;
 }
 
-void ustr_append (struct ustr* sst, const char* a)
+void ustr_append (struct ustr* ust, const char* new)
 {
-    assert(sst);
-    assert(a);
+    assert(ust != NULL);
+    assert(new != NULL);
 
-    size_t ssz = strlen(a);
-    sst->data = (char*) realloc(sst->data, sst->size + ssz + 1);
-    sst->data = strcat(sst->data, a);
-    sst->size += ssz;
+    size_t ssz = strlen(new);
+    ust->data = (char*) realloc(ust->data, ust->size + ssz + 1);
+    ust->data = strcat(ust->data, new);
+    ust->size += ssz;
 }
 
-void ustr_clear (struct ustr* sst)
+void ustr_clear (struct ustr* ust)
 {
-    assert(sst);
-    free(sst->data);
-    sst->data = (char*) malloc(1);
-    sst->size = 0;
-    sst->data[0] = '\0';
+    assert(ust != NULL);
+
+    free(ust->data);
+    ust->data = (char*) malloc(1);
+    ust->size = 0;
+    ust->data[0] = '\0';
 }
 
-void ustr_erase (struct ustr* sst, size_t b, size_t e)
+void ustr_erase (struct ustr* ust, size_t bgn, size_t end)
 {
-    assert(sst);
-    assert(b >= 0);
-    assert(e >= 0);
-    assert(b <= e);
-    assert(e < sst->size);
+    assert(ust != NULL);
+    assert(bgn >= 0);
+    assert(end >= 0);
+    assert(bgn <= end);
+    assert(end < ust->size);
 
-    if ( !b && e == sst->size )
+    if ( !bgn && end == ust->size )
     {
-        ustr_clear(sst);
+        ustr_clear(ust);
         return;
     }
 
     /* Saves all character that are after 'e' position not
      * \0 including. */
-    char* chrsleft = (char*) malloc(sst->size - e - 1);
-    for (size_t i = e + 1, j = 0; i < sst->size; i++)
+    char* chrsleft = (char*) malloc(ust->size - end - 1);
+    for (size_t i = end + 1, j = 0; i < ust->size; i++)
     {
-        chrsleft[j++] = sst->data[i];
+        chrsleft[j++] = ust->data[i];
     }
 
-    /* Since all characters after 'b' was removed
+    /* Since all characters in range [b, e] was removed
      * the new end is set to 'b' position and then
      * just add the 'chrsleft'. */
-    sst->data[b] = '\0';
-    sst->size = sst->size - (e - b) - 1;
-    sst->data = (char*) realloc(sst->data, sst->size + 1);
-    sst->data = strcat(sst->data, chrsleft);
+    ust->data[bgn] = '\0';
+    ust->size = ust->size - (end - bgn) - 1;
+    ust->data = (char*) realloc(ust->data, ust->size + 1);
+    ust->data = strcat(ust->data, chrsleft);
+}
+
+void ustr_popback (struct ustr* ust)
+{
+    assert(ust != NULL);
+    assert(ust->size >= 1);
+
+    ust->data[--ust->size] = '\0';
+    ust->data = (char*) realloc(ust->data, ust->size);
+}
+
+bool ustr_isLike (struct ustr* ust, const char* with, const enum ustrPos type)
+{
+    assert(ust != NULL);
+    assert(with != NULL);
+
+    size_t nchrswith = strlen(with);
+    if ( nchrswith >= ust->size ) { return false; }
+
+    char* islike = (char*) malloc(nchrswith);
+    size_t skipchrs = (type == USTR_BEGS) ? 0 : (ust->size - nchrswith);
+    strncpy(islike, ust->data + skipchrs, nchrswith);
+
+    bool same = (strcmp(islike, with)) ? false : true;
+    free(islike);
+    return same;
 }
 
 int main ()
