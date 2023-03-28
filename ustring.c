@@ -63,7 +63,6 @@ void ustr_erase (struct ustr* ust, size_t bgn, size_t end)
         chrsleft[j++] = ust->data[i];
     }
 
-    // XXX: May '\0' char is not added if we delete the end of the string.
     ust->data[bgn] = '\0';
     ust->size = ust->size - (end - bgn) - 1;
     ust->data = (char*) realloc(ust->data, ust->size + 1);
@@ -115,8 +114,7 @@ bool ustr_contains (struct ustr* ust, const char* str)
     return false;
 }
 
-// XXX: May can implement a "cut" argument.
-char* ustr_substring (struct ustr* ust, size_t bgn, size_t end)
+char* ustr_substring (struct ustr* ust, size_t bgn, size_t end, bool cut)
 {
     assert(ust);
     assert(bgn >= 0);
@@ -129,6 +127,8 @@ char* ustr_substring (struct ustr* ust, size_t bgn, size_t end)
     {
         substr[j++] = ust->data[i];
     }
+
+    if ( cut ) { ustr_erase(ust, bgn, end); }
     return substr;
 }
 
@@ -157,9 +157,4 @@ void ustr_kill (struct ustr* ust)
 {
     free(ust->data);
     free(ust);
-}
-
-int main ()
-{
-    return 0;
 }
