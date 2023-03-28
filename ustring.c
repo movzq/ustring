@@ -11,11 +11,11 @@ struct ustr* ustr_make ()
     return ust;
 }
 
-void ustr_pushBack (struct ustr* ust, const char p)
+void ustr_pushBack (struct ustr* ust, const char push)
 {
     assert(ust != NULL);
     ust->data = (char*) realloc(ust->data, ust->size + 2);
-    ust->data[ust->size] = p;
+    ust->data[ust->size] = push;
     ust->data[ust->size + 1] = '\0';
     ust->size++;
 }
@@ -27,7 +27,7 @@ void ustr_append (struct ustr* ust, const char* new)
 
     size_t ssz = strlen(new);
     ust->data = (char*) realloc(ust->data, ust->size + ssz + 1);
-    ust->data = strcat(ust->data, new);
+    strcat(ust->data, new);
     ust->size += ssz;
 }
 
@@ -55,7 +55,7 @@ void ustr_erase (struct ustr* ust, size_t bgn, size_t end)
         return;
     }
 
-    /* Saves all character that are after 'e' position not
+    /* Saves all character that are after 'end' position not
      * \0 including. */
     char* chrsleft = (char*) malloc(ust->size - end - 1);
     for (size_t i = end + 1, j = 0; i < ust->size; i++)
@@ -63,13 +63,11 @@ void ustr_erase (struct ustr* ust, size_t bgn, size_t end)
         chrsleft[j++] = ust->data[i];
     }
 
-    /* Since all characters in range [b, e] was removed
-     * the new end is set to 'b' position and then
-     * just add the 'chrsleft'. */
+    // XXX: May '\0' char is not added if we delete the end of the string.
     ust->data[bgn] = '\0';
     ust->size = ust->size - (end - bgn) - 1;
     ust->data = (char*) realloc(ust->data, ust->size + 1);
-    ust->data = strcat(ust->data, chrsleft);
+    strcat(ust->data, chrsleft);
 }
 
 void ustr_popback (struct ustr* ust)
@@ -96,6 +94,69 @@ bool ustr_isLike (struct ustr* ust, const char* with, const enum ustrPos type)
     bool same = (strcmp(islike, with)) ? false : true;
     free(islike);
     return same;
+}
+
+bool ustr_contains (struct ustr* ust, const char* str)
+{
+    assert(ust != NULL);
+    assert(str != NULL);
+
+    size_t sizestr = strlen(str);
+    if ( sizestr >= ust->size ) { return false; }
+
+    char* sub = (char*) malloc(sizestr);
+    for (unsigned i = 0; i < ust->size; i++)
+    {
+        while ( str[0] != ust->data[i] ) { i++; }
+        strncpy(sub, ust->data + i, sizestr);
+
+        if ( !strcmp(sub, str) ) { return true; }
+    }
+    return false;
+}
+
+// XXX: May can implement a "cut" argument.
+char* ustr_substring (struct ustr* ust, size_t bgn, size_t end)
+{
+    assert(ust);
+    assert(bgn >= 0);
+    assert(end >= 0);
+    assert(bgn <= end);
+    assert(end < ust->size);
+
+    char* substr = (char*) malloc(end - bgn + 1);
+    for (size_t i = bgn, j = 0; i <= end; i++)
+    {
+        substr[j++] = ust->data[i];
+    }
+    return substr;
+}
+
+void ustr_overwrite (struct ustr* ust, const char* repfor, size_t idx)
+{
+    assert(ust != NULL);
+    assert(repfor != NULL);
+    assert(idx >= 0);
+    assert(idx <= ust->size);
+
+    size_t sizerep = strlen(repfor);
+    size_t availablechrs = ust->size - idx;
+
+    if ( sizerep <= availablechrs )
+    {
+        strncpy(ust->data + idx, repfor, sizerep);
+        return;
+    }
+
+    ust->size += sizerep - availablechrs;
+    ust->data = (char*) realloc(ust->data, ust->size);
+    strcpy(ust->data + idx, repfor);
+}
+
+void ustr_kill (struct ustr* ust)
+{
+    free(ust->data);
+    free(ust);
 }
 
 int main ()
