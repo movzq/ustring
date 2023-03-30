@@ -21,7 +21,7 @@ void ustr_append (struct ustr*, const char*);
 void ustr_clear (struct ustr*);
 void ustr_erase (struct ustr*, size_t, size_t);
 void ustr_popBack (struct ustr*);
-bool ustr_isLike (struct ustr*, const char*, const enum ustrPos);
+bool ustr_bewith (struct ustr*, const char*, const enum ustrPos);
 bool ustr_contains (struct ustr*, const char*);
 char* ustr_substring (struct ustr*, size_t, size_t, bool);
 void ustr_overwrite (struct ustr*, const char*, size_t);
