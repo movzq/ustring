@@ -1,16 +1,17 @@
 ustring.
-        Simple C string to do my own stuff, and if u like it for yours too.
-        It implents some C++ string functions such as:
-        * void  push_back (Adds one character).
-        * void  append    (Adds one string).
-        * void  clear     (Set the content as defualt).
-        * void  erase     (Removes [n, m] characters from the string).
-        * void  pop_back  (Removes the last character of the string).
-        * bool  bewith    (Begins/ends with...).
-        * bool  contains  (Check if the string has some string into it).
-        * char* substring (Gets the [n, m] part of the string).
-        * void  overwrite (Overwrites n characters of the string for the new content).
-        * void  kill      (Dealloc the content of the struct).
+    Simple C string to do my own stuff, and if u like it for yours too.
+    It implents some C++ string functions such as:
+    * void  push_back (Adds one character).
+    * void  append    (Adds one string).
+    * void  clear     (Set the content as defualt).
+    * void  erase     (Removes [n, m] characters from the string).
+    * void  pop_back  (Removes the last character of the string).
+    * bool  bewith    (Begins/ends with...).
+    * bool  contains  (Check if the string has some string into it).
+    * char* substring (Gets the [n, m] part of the string).
+    * void  overwrite (Overwrites n characters of the string for the new content).
+    * char  at        (Returns the character at the pos given, null character if pos' outta range).
+    * void  kill      (Dealloc the content of the struct).
 
-        All functions that requires indexes include them into the range, so if the function looks like
-        void name (size_t n, size_t m) it'll be [n, m].
+    All functions that requires indexes include them into the range, so if the function looks like
+    void name (size_t n, size_t m) it'll be [n, m].
