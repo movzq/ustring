@@ -42,8 +42,8 @@ void ustr_clear (struct ustr* ust)
 void ustr_erase (struct ustr* ust, size_t bgn, size_t end)
 {
     assert(ust);
-    assert(bgn);
-    assert(end);
+    assert(bgn >= 0);
+    assert(end >= 0);
     assert(bgn <= end);
     assert(end < ust->size);
 
@@ -113,8 +113,8 @@ bool ustr_contains (struct ustr* ust, const char* str)
 char* ustr_substring (struct ustr* ust, size_t bgn, size_t end, bool cut)
 {
     assert(ust);
-    assert(bgn);
-    assert(end);
+    assert(bgn >= 0);
+    assert(end >= 0);
     assert(bgn <= end);
     assert(end < ust->size);
 
