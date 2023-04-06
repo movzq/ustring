@@ -27,6 +27,7 @@ void ustr_append (struct ustr* ust, const char* new)
     ust->data = (char*) realloc(ust->data, ust->size + ssz + 1);
     strcat(ust->data, new);
     ust->size += ssz;
+    ust->data[ust->size] = '\0';
 }
 
 void ustr_clear (struct ustr* ust)
@@ -60,6 +61,7 @@ void ustr_erase (struct ustr* ust, size_t bgn, size_t end)
     ust->size = ust->size - (end - bgn) - 1;
     ust->data = (char*) realloc(ust->data, ust->size + 1);
     strcat(ust->data, chrsleft);
+    ust->data[ust->size] = '\0';
 }
 
 void ustr_popback (struct ustr* ust)
