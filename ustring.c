@@ -145,7 +145,7 @@ void ustr_overwrite (struct ustr* ust, const char* repfor, size_t idx)
     }
 
     ust->size += sizerep - availablechrs;
-    ust->data = (char*) realloc(ust->data, ust->size);
+    ust->data = (char*) realloc(ust->data, ust->size + 1);
     strcpy(ust->data + idx, repfor);
 }
 
