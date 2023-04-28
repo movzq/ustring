@@ -1,4 +1,7 @@
 #include "ustring.h"
+#include <string.h>
+#include <assert.h>
+#include <stdarg.h>
 
 struct ustr* ustr_make ()
 {
@@ -83,7 +86,7 @@ bool ustr_bewith (struct ustr* ust, const char* with, const enum ustrPos type)
         return false;
 
     char* islike = (char*) malloc(nchrswith);
-    size_t skipchrs = (type == USTR_BEGS) ? 0 : (ust->size - nchrswith);
+    size_t skipchrs = (type == USTR_AT_BGN) ? 0 : (ust->size - nchrswith);
     strncpy(islike, ust->data + skipchrs, nchrswith);
 
     bool same = (strcmp(islike, with)) ? false : true;

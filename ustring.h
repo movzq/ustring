@@ -1,13 +1,11 @@
 #ifndef _USTRING_H
 #define _USTRING_H
 #include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 #include <stdbool.h>
 
 enum ustrPos {
-    USTR_ENDS,
-    USTR_BEGS
+    USTR_AT_END,
+    USTR_AT_BGN
 };
 
 struct ustr {
